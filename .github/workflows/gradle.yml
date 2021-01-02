@@ -29,5 +29,5 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
-       name: main
-       path: ./bukkit/build/libs/griefdefender-*.jar
+       name: builds
+       path: ./*/build/libs/griefdefender-*.jar
