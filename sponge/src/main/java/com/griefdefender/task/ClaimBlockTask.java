@@ -57,7 +57,7 @@ public class ClaimBlockTask implements Runnable {
                 if (accrualPerHour > 0) {
                     final Location<World> lastLocation = playerData.lastAfkCheckLocation;
                     if (!player.get(VehicleData.class).isPresent() &&
-                            (lastLocation == null || lastLocation.getPosition().distanceSquared(player.getLocation().getPosition()) > (blockMoveThreshold * blockMoveThreshold))) {
+                            (lastLocation == null || lastLocation.getPosition().distanceSquared(player.getLocation().getPosition()) >= (blockMoveThreshold * blockMoveThreshold))) {
                         int accruedBlocks = playerData.getBlocksAccruedPerHour() / 12;
                         if (accruedBlocks < 0) {
                             accruedBlocks = 1;
@@ -66,7 +66,7 @@ public class ClaimBlockTask implements Runnable {
                         if (GriefDefenderPlugin.getInstance().isEconomyModeEnabled()) {
                             final Account playerAccount = GriefDefenderPlugin.getInstance().economyService.get().getOrCreateAccount(player.getUniqueId()).orElse(null);
                             if (playerAccount == null) {
-                                return;
+                                continue;
                             }
 
                             final Currency defaultCurrency = GriefDefenderPlugin.getInstance().economyService.get().getDefaultCurrency();
@@ -76,7 +76,7 @@ public class ClaimBlockTask implements Runnable {
                             if ((currentTotal + accruedBlocks) > playerData.getMaxAccruedClaimBlocks()) {
                                 playerData.setAccruedClaimBlocks(playerData.getMaxAccruedClaimBlocks());
                                 playerData.lastAfkCheckLocation = player.getLocation();
-                                return;
+                                continue;
                             }
 
                             playerData.setAccruedClaimBlocks(playerData.getAccruedClaimBlocks() + accruedBlocks);
